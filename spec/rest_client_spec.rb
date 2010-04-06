@@ -27,7 +27,7 @@ describe Restfulie do
   class Buy
     
     def completed?(resource)
-      resource.status == "paid"
+      resource.respond_to?(:status) && resource.status == "paid"
     end
     
     def next_step(resource)
@@ -37,6 +37,10 @@ describe Restfulie do
         PickProduct.new
       elsif resource.respond_to?("search")
         SearchProducts.new
+      else
+        puts "Resource links are: "
+        puts resource.links
+        raise "Unable to find the next step for #{resource} with #{resource.response.code}, #{resource.response.body}"
       end
     end
     
@@ -44,7 +48,10 @@ describe Restfulie do
   
   class SearchProducts
     def execute(entry)
-      resource.search("product" => "restfulie in practice")
+      entry.search.as('application/xml').post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+      <item>
+        <name>rest</name>
+      </item>")
     end
     def ok(objective)
     end
@@ -81,11 +88,12 @@ describe Restfulie do
     def run(uri)
       
       current = Restfulie.at(uri).get!
+      puts current.response.body
       
       while(!@goal.completed?(current))
         step = @goal.next_step(current)
         puts "Next step will be #{step}"
-        direct_execute(@goal, step, current, 3)
+        try_to_execute(step, current, 3)
       end
       
     end
@@ -97,7 +105,7 @@ describe Restfulie do
 
       resource = step.execute(current)
       if resource.response.code != 200
-        execute(@goal, step, max_attempts - 1)
+        try_to_execute(step, max_attempts - 1)
       else
         step.ok(@goal)
         resource

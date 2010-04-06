@@ -6,6 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.add_item_order '/orders/:order_id/items/:index/:id', :action => 'add', :controller => 'order/items', :conditions => { :method => :post }
 
   map.resources :items, :only => [:new,:destroy,:index,:create]
+  map.search_item '/search_items', :controller => :items, :action => :search
 
   map.resources :payments, :only => [:index]
   map.create_payment  '/payments/order/:id', :action => 'pay'    , :controller => 'payments', :conditions => { :method => :post }
@@ -13,9 +14,10 @@ ActionController::Routing::Routes.draw do |map|
   map.approve_payment '/payments/:id'      , :action => 'approve', :controller => 'payments', :conditions => { :method => :post }
   map.refuse_payment  '/payments/:id'      , :action => 'refuse' , :controller => 'payments', :conditions => { :method => :delete }
   
+  map.resources :baskets, :only => [:create, :show]
+  
   map.root :controller => :orders, :action => :index
-
-
+  
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
