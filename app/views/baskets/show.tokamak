@@ -1,0 +1,6 @@
+describe_collection(@basket.selected_items) do |collection|
+  collection.id = basket_url(@basket)
+  collection.describe_members do |member,selected_item|
+    selected_item.item
+  end
+end

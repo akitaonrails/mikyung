@@ -67,7 +67,10 @@ describe Restfulie do
       cheapest = list.entries.inject(list.entries[0]) do |cheapest, item|
         (price(cheapest) <= price(item)) ? cheapest : item
       end
-      list.basket.as("application/atom+xml").post!(cheapest.to_xml)
+      list.basket.as("application/xml").post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+      <basket>
+        <item><id>#{cheapest.id}</id></item>
+      </basket>")
       # should be list.basket.post!(cheapest)
       # should be list.basket << cheapest
     end

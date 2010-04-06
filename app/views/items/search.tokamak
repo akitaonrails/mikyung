@@ -2,6 +2,7 @@ describe_collection(@items) do |collection|
   collection.id = search_item_url
   collection.links << link( :rel => :basket,  :href => baskets_url )
   collection.describe_members(:namespace => "http://localhost:3000/items") do |member, item|
+    member.id = item.id
     member.links << link( :rel => :self, :href => item_url(item))
   end
 end
