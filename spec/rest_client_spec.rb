@@ -58,11 +58,18 @@ describe Restfulie do
   end
   
   class PickProduct
-    def execute(items)
-      cheapest = resource.items.inject(resource.items[0]) do |cheapest, item|
-        (cheapest.price <= item.price) ? cheapest : item
+    
+    def price(item)
+      item["http://localhost:3000/items", "price"][0].to_d
+    end
+    
+    def execute(list)
+      cheapest = list.entries.inject(list.entries[0]) do |cheapest, item|
+        (price(cheapest) <= price(item)) ? cheapest : item
       end
-      resource.basket << cheapest
+      list.basket.as("application/atom+xml").post!(cheapest.to_xml)
+      # should be list.basket.post!(cheapest)
+      # should be list.basket << cheapest
     end
     def ok(objective)
       objective.added
@@ -93,7 +100,7 @@ describe Restfulie do
       while(!@goal.completed?(current))
         step = @goal.next_step(current)
         puts "Next step will be #{step}"
-        try_to_execute(step, current, 3)
+        current = try_to_execute(step, current, 3)
       end
       
     end
@@ -107,6 +114,7 @@ describe Restfulie do
       if resource.response.code != 200
         try_to_execute(step, max_attempts - 1)
       else
+        puts resource.response.body
         step.ok(@goal)
         resource
       end
