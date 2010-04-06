@@ -71,31 +71,39 @@ describe Restfulie do
     end
   end
   
-  def try_to_execute(objective, step, current, max_attempts)
-    raise "Unable to proceed when trying to #{step}" if max_attempts == 0
-    
-    resource = step.execute(current)
-    if resource.response.code != 200
-      execute(objective, step, max_attempts - 1)
-    else
-      step.ok(objective)
-      resource
+  class RestClient
+
+    # keeps changing from a steady state to another until its goal has been achieved
+    def run(goal, uri)
+      current = Restfulie.at(uri).get!
+      while(!goal.completed?(current))
+        step = goal.next_step(current)
+        puts "Next step will be #{step}"
+        direct_execute(goal, step, current, 3)
+      end
     end
-  end
-  
-  def direct_execute(objective, step, current, max_attempts)
-    step.execute(current)
-  end
-  
-  def client_magic(objective, uri)
-    current = Restfulie.at(uri).get!
-    while(!objective.completed?(current))
-      direct_execute(objective, objective.next_step(current), current, 3)
+
+    private
+    
+    def try_to_execute(objective, step, current, max_attempts)
+      raise "Unable to proceed when trying to #{step}" if max_attempts == 0
+
+      resource = step.execute(current)
+      if resource.response.code != 200
+        execute(objective, step, max_attempts - 1)
+      else
+        step.ok(objective)
+        resource
+      end
+    end
+
+    def direct_execute(objective, step, current, max_attempts)
+      step.execute(current)
     end
   end
   
   it "magics" do
-    client_magic(Buy.new, 'http://localhost:3000/')
+    RestClient.new.run(Buy.new, 'http://localhost:3000/')
   end
   
 end

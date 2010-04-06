@@ -12,6 +12,8 @@ ActionController::Routing::Routes.draw do |map|
   map.new_payment     '/payments/order/:id', :action => 'pay'    , :controller => 'payments', :conditions => { :method => :post }
   map.approve_payment '/payments/:id'      , :action => 'approve', :controller => 'payments', :conditions => { :method => :post }
   map.refuse_payment  '/payments/:id'      , :action => 'refuse' , :controller => 'payments', :conditions => { :method => :delete }
+  
+  map.root :controller => :orders, :action => :index
 
 
   # The priority is based upon order of creation: first created -> highest priority.

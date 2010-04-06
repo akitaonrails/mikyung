@@ -5,6 +5,6 @@ describe_collection([]) do |collection|
   #member.links << link( :rel => :list_items_to_add, :href => order_items_url(order.id), :type => :html)
   #member.links << link( :rel => :add_items, :href => order_items_url(order.id), :type => :html)
   #member.links << link( :rel => :pay      , :href => payments_create_url(order.id) )
-  end
+  # end
 end
 
