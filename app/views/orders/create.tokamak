@@ -1,6 +1,0 @@
-describe_member(@order) do |representation|
-  representation.id = order_url(@order)
-  representation.title = "Order #{@order.id}"
-  representation.links << link( :rel => :self,  :href => order_url(@order) )
-end
-

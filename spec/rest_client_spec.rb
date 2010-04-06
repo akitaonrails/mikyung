@@ -33,7 +33,7 @@ describe Restfulie do
     def next_step(resource)
       if resource.respond_to?("payment")
         FinishesOrder.new
-      elsif resource.respond_to?("basket") && !@added
+      elsif resource.respond_to?("basket")
         PickProduct.new
       elsif resource.respond_to?("search")
         SearchProducts.new
@@ -69,22 +69,29 @@ describe Restfulie do
       end
       list.basket.as("application/xml").post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
       <basket>
-        <item><id>#{cheapest.id}</id></item>
+        <item><id>#{cheapest.id}</id><quantity>2</quantity></item>
+        <item><id>#{cheapest.id}</id><quantity>1</quantity></item>
       </basket>")
       # should be list.basket.post!(cheapest)
       # should be list.basket << cheapest
     end
     def ok(objective)
-      objective.added
     end
   end
   
   class FinishesOrder
     def execute(basket)
+      basket.paym
+      basket.payment.as("application/xml").post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+      <payment>
+      ...
+      </payment>")
+      # should be basket.payment.post!(payment)
+      # should be basket.payment << payment
+
       basket.payment << payment
     end
     def ok(objective)
-      objective.bought
     end
   end
   

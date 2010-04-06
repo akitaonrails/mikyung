@@ -5,7 +5,7 @@ class BasketsController < ApplicationController
   def create
     b = Basket.new
     items.each do |item|
-      item = SelectedItem.create(:item => Item.find(item["id"].to_i))
+      item = SelectedItem.create(:item => Item.find(item["id"].to_i), :quantity => item["quantity"].to_i)
       b.selected_items << item
     end
     b.save

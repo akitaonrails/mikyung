@@ -2,26 +2,13 @@ class PaymentsController < Restfulie::Server::ActionController::Base
 
   respond_to :atom,:html
 
-  def index 
-    respond_with @payments = Payment.all
+  def create
+    @payment = Payment.create(params[:payment])
+    render :text => "" , :status => 201, :location => basket_payment_url([@basket, @payment])
   end
-
-  def pay
-    @order = Order.find(params[:id])
-    @payment = Payment.create!(:order => @order)
-    respond_with @payment
-  end
-
-  def approve
-    @payment = Payment.find(params[:id])
-    @payment.approve!
-    respond_with @payment
-  end
-
-  def refuse
-    @payment = Payment.find(params[:id])
-    @payment.refuse!
-    respond_with @payment
+  
+  def show
+    respond_with @payment = Payment.find(params[:id])
   end
 
 end

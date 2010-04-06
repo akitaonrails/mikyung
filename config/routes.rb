@@ -1,22 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.resources :orders, :only => [:new,:destroy,:index,:create, :show] do |orders|
-    orders.resources :items, :controller => 'orders/items', :only => [:index,:show,:new]
-  end
-  map.add_item_order '/orders/:order_id/items/:index/:id', :action => 'add', :controller => 'order/items', :conditions => { :method => :post }
-
   map.resources :items, :only => [:new,:destroy,:index,:create]
   map.search_item '/search_items', :controller => :items, :action => :search
-
-  map.resources :payments, :only => [:index]
-  map.create_payment  '/payments/order/:id', :action => 'pay'    , :controller => 'payments', :conditions => { :method => :post }
-  map.new_payment     '/payments/order/:id', :action => 'pay'    , :controller => 'payments', :conditions => { :method => :post }
-  map.approve_payment '/payments/:id'      , :action => 'approve', :controller => 'payments', :conditions => { :method => :post }
-  map.refuse_payment  '/payments/:id'      , :action => 'refuse' , :controller => 'payments', :conditions => { :method => :delete }
   
-  map.resources :baskets, :only => [:create, :show]
+  map.resources :baskets, :only => [:create, :show], :has_many => [:payments]
   
-  map.root :controller => :orders, :action => :index
+  map.root :controller => :entries, :action => :index
   
   # The priority is based upon order of creation: first created -> highest priority.
 

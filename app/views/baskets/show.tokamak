@@ -1,6 +1,16 @@
-describe_collection(@basket.selected_items) do |collection|
-  collection.id = basket_url(@basket)
-  collection.describe_members do |member,selected_item|
-    selected_item.item
+describe_collection(@basket.selected_items, :values => { :id => "http://openbuy.com/media/basket" }) do |collection|
+  collection.title = basket_url @basket
+  collection.id = basket_url @basket
+  
+  collection.links << link(:rel => :payment, :href => basket_payments_url(@basket))
+
+  collection.describe_members do |member, selected_item|
+    member.id = item_url(selected_item)
+    member.links << link( :rel => :self, :href => item_url(selected_item))
+
+    member.namespace(:item, "http://openbuy.com/media/item") do |ns|
+      puts "quantity '#{selected_item.quantity}'"
+      ns.quantity = selected_item.quantity
+    end
   end
 end

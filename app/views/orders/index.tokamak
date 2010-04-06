@@ -1,5 +1,0 @@
-describe_collection([]) do |collection|
-  collection.id = root_url
-  collection.links << link( :rel => :search,  :href => search_item_url )
-end
-
