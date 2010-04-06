@@ -3,7 +3,8 @@ class OrdersController < Restfulie::Server::ActionController::Base
   respond_to :atom, :html
 
   def index
-    respond_with @orders = Order.all
+    respond_with []
+    # respond_with @orders = Order.all
   end
 
   def new
@@ -11,7 +12,11 @@ class OrdersController < Restfulie::Server::ActionController::Base
   end
 
   def create
-    respond_with @order = Order.create!
+    @order = Order.create!
+    # redirect_to order_url(order)
+    render :text => "" , :status => 201, :location => order_url(@order)
+    # respond_with @order, :status => 201, :location => order_url(@order)
+    # respond_with @order = Order.create!
   end
   
   def show
