@@ -31,6 +31,9 @@ describe Restfulie do
     end
     
     def next_step(resource)
+      
+      # TODO REFACTOR THIS ONE
+      
       if resource.respond_to?("payment")
         FinishesOrder.new
       elsif resource.respond_to?("basket")
@@ -48,18 +51,22 @@ describe Restfulie do
   
   class SearchProducts
     def execute(entry)
+      
+      # automatic INSTANCE TO ATOM...
+      # TODO 2 sera que funcionaria OPEN SEARCH???
+      
       entry.search.as('application/xml').post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
       <item>
         <name>rest</name>
       </item>")
-    end
-    def ok(objective)
     end
   end
   
   class PickProduct
     
     def price(item)
+      
+      # TODO acessar diretamente
       item["http://localhost:3000/items", "price"][0].to_d
     end
     
@@ -67,6 +74,8 @@ describe Restfulie do
       cheapest = list.entries.inject(list.entries[0]) do |cheapest, item|
         (price(cheapest) <= price(item)) ? cheapest : item
       end
+      
+      # TODO atom ja ajudaria
       list.basket.as("application/xml").post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
       <basket>
         <item><id>#{cheapest.id}</id><quantity>2</quantity></item>
@@ -75,23 +84,17 @@ describe Restfulie do
       # should be list.basket.post!(cheapest)
       # should be list.basket << cheapest
     end
-    def ok(objective)
-    end
   end
   
   class FinishesOrder
     def execute(basket)
-      basket.paym
+      # FUNCIONAR ESSE PAYMENT
       basket.payment.as("application/xml").post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
       <payment>
       ...
       </payment>")
       # should be basket.payment.post!(payment)
       # should be basket.payment << payment
-
-      basket.payment << payment
-    end
-    def ok(objective)
     end
   end
   
@@ -125,7 +128,6 @@ describe Restfulie do
         try_to_execute(step, max_attempts - 1)
       else
         puts resource.response.body
-        step.ok(@goal)
         resource
       end
     end
