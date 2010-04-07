@@ -1,0 +1,40 @@
+h2. Objective examples
+
+You can create your own objective builders, with the required conditions that your goal achiever requires.
+Mikyung provides one objective builder called *RelationDrivenObjective* to describe how to use it. The following example shows how to achieve a buying objective:
+
+[pre]
+class Buy < RelationDrivenObjective
+  
+  executes FinishesOrder, :when => has_relation(:payment)
+  executes PickProduct, :when => has_relation(:basket)
+  executes SearchProducts, :when => has_relation(:search)
+
+  def completed?(resource)
+    resource.respond_to?(:status) && resource.status == "paid"
+  end
+  
+end
+[/pre]
+
+
+
+A less declarative approach is to implement both the completed? and *next_step* methods:
+
+[pre]
+class Buy
+  
+  def completed?(resource)
+    resource.respond_to?(:status) && resource.status == "paid"
+  end
+  
+  def next_step(resource)
+    options = [ ["payment", FinishesOrder], ["basket", PickProduct], ["search", SearchProducts]]
+    step = options.find do |k|
+      resource.respond_to?(k.first)
+    end
+    step ? step.last : nil
+  end
+  
+end
+[/pre]

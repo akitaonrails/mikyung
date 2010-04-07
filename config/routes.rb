@@ -2,6 +2,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :items, :only => [:new,:destroy,:index,:create]
   map.search_item '/search_items', :controller => :items, :action => :search
+  map.search_definition_item '/search_items/definition', :controller => :items, :action => :search_defition
   
   map.resources :baskets, :only => [:create, :show], :has_many => [:payments]
   
