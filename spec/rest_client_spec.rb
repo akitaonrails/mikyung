@@ -1,29 +1,7 @@
 require 'spec_helper'
 
 describe Restfulie do
-  
-  # curl -H "Accept:application/atom+xml" -i http://localhost:3000/orders/1
 
-  # curl -d "<order><name>Caelum Objects Hotel</name></order>" -H "Content-type:application/xml" -H "Accept:application/atom+xml" -i http://localhost:3000/orders
-  
-  # it "reads" do
-  #   order = Restfulie.at('http://localhost:3000/orders/1').accepts('application/atom+xml').get!
-  #   order.items.each { |item| puts items }
-  # end
-  # 
-  # it "works" do
-  #   order = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-  #   <entry xmlns=\"http://www.w3.org/2005/Atom\">
-  #     <title>Order 1</title>
-  #     <id>http://localhost:3000/orders/1</id>
-  #     <updated>2010-04-03T22:45:47Z</updated>
-  #     <link href=\"http://localhost:3000/orders/1\" rel=\"self\"/>
-  #   </entry>
-  #   "
-  #   order = Restfulie.at('http://localhost:3000/orders').as('application/atom+xml').accepts('application/atom+xml').post!(order)
-  #   order.items.each { |item| puts items }
-  # end
-  
   class Buy
     
     def completed?(resource)
@@ -65,14 +43,12 @@ describe Restfulie do
   class PickProduct
     
     def price(item)
-      
-      # TODO acessar diretamente
-      item["http://localhost:3000/items", "price"][0].to_d
+      item.price
     end
     
     def execute(list)
-      cheapest = list.entries.inject(list.entries[0]) do |cheapest, item|
-        (price(cheapest) <= price(item)) ? cheapest : item
+      cheapest = list.entries.inject(list.entries[0]) do |f, s|
+        f.price <= s.price ? f : s
       end
       
       # TODO atom ja ajudaria
