@@ -9,20 +9,11 @@ describe Restfulie do
     end
     
     def next_step(resource)
-      
-      # TODO REFACTOR THIS ONE
-      
-      if resource.respond_to?("payment")
-        FinishesOrder.new
-      elsif resource.respond_to?("basket")
-        PickProduct.new
-      elsif resource.respond_to?("search")
-        SearchProducts.new
-      else
-        puts "Resource links are: "
-        puts resource.links
-        raise "Unable to find the next step for #{resource} with #{resource.response.code}, #{resource.response.body}"
+      options = [ ["payment", FinishesOrder], ["basket", PickProduct], ["search", SearchProducts]]
+      step = options.find do |k|
+        resource.respond_to?(k.first)
       end
+      step ? step.last : nil
     end
     
   end
@@ -84,12 +75,13 @@ describe Restfulie do
     def run(uri)
       
       current = Restfulie.at(uri).get!
-      puts current.response.body
+      # puts current.response.body
       
       while(!@goal.completed?(current))
         step = @goal.next_step(current)
-        puts "Next step will be #{step}"
-        current = try_to_execute(step, current, 3)
+        raise "No step was found for #{current} with links #{current.links}" unless step
+        # puts "Next step will be #{step}"
+        current = try_to_execute(step.new, current, 3)
       end
       
     end
@@ -103,7 +95,7 @@ describe Restfulie do
       if resource.response.code != 200
         try_to_execute(step, max_attempts - 1)
       else
-        puts resource.response.body
+        # puts resource.response.body
         resource
       end
     end
