@@ -38,5 +38,6 @@ class Restfulie::Common::Representation::Commerce
   
 end
 
+Mime::Type.register "application/commerce+xml", :commerce
 Restfulie::Client::HTTP::RequestMarshaller.register_representation("application/commerce+xml", Restfulie::Common::Representation::Commerce)
 Restfulie::Server::ActionController::ParamsParser.register('application/commerce+xml', Restfulie::Common::Representation::Commerce)

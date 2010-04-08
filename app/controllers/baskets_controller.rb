@@ -1,6 +1,6 @@
 class BasketsController < ApplicationController
   
-  respond_to :atom, :html
+  respond_to :atom, :html, :commerce
   
   def create
     b = Basket.new
