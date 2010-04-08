@@ -6,7 +6,7 @@ class Restfulie::Common::Representation::Commerce
   cattr_reader :headers
   @@headers = { 
     :get  => { 'Accept'       => media_type_name },
-    :post => { }
+    :post => { 'Content-type' => media_type_name }
   }
 
   #Convert raw string to rAtom instances
@@ -32,11 +32,6 @@ class Restfulie::Common::Representation::Commerce
     link
   end
   
-  def self.to_hash(string)
-    Hash.from_xml(string).with_indifferent_access
-  end
-  
 end
 
 Restfulie::Client::HTTP::RequestMarshaller.register_representation("application/commerce+xml", Restfulie::Common::Representation::Commerce)
-Restfulie::Server::ActionController::ParamsParser.register('application/commerce+xml', Restfulie::Common::Representation::Commerce)
