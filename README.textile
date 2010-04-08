@@ -1,3 +1,111 @@
+h2. The need for a Rest client
+
+*Let media types and relations* drive your client, as REST is.
+
+But, Http, Verbs, Media types, Representations, Error codes, retrials, conditional requests, there are so many things we should do to implement a REST system.
+
+Built upon Restfulie, *Mikyung* provides a layer of client generalization that gives you enough room to configure how your client should behave in different situations and make them work with different servers.
+
+h2. Simple example
+
+In order to create a REST client, anyone needs to have a goal and a sequence of steps that we can follow to pursue this goal. Mikyung implements a simple framework so you can define your goal and steps, and let everything else happen.
+
+As a simple example, let's try to buy something in *any* REST server:
+
+<pre>Mikyung.new(Buy.new).run('http://openbuystore.caelumobjects.com:/')</pre>
+
+This is how you awake a REST client, that will start executing a series of requests until its objective is achieved.
+
+If we want to achieve the same goal in another system, Mikyung and Restfulie will handle it all, just change the entry point URI. All its required is that your client understands the server's media types.
+
+And now, our goal is to have a payment that is paid:
+
+<pre>
+	class Buy < RelationDrivenObjective
+
+	  def completed?(resource)
+	    resource.respond_to?(:status) && resource.status == "paid"
+	  end
+
+	  executes FinishesOrder, :when => has_relation?(:payment)
+	  executes PickProduct, :when => has_relation?(:basket)
+	  executes SearchProducts, :when => has_relation?(:search)
+
+	end
+</pre>
+
+If there is a search relation, let's search for our items:
+
+<pre>
+class SearchProducts
+  def execute(entry)
+    entry.search.get("rest")
+  end
+end
+</pre>
+
+How will it work? Restfulie will content negotiate and discover that your server understands, lets say, opensearch. Using an OpenSearch media type handler, it will serialize your object to execute the query.
+
+If your server understood Yahoo's YQL and provided an YQL specification handler, Restfulie would execute the query using YQL.
+
+The next step is to choose the cheapest and the first product on the list:
+
+<pre>
+class PickProduct
+
+  def execute(list)
+    
+    cheapest = list.entries...
+    
+    # adds the cheapest and the first product
+    basket = [{:id => cheapest.id, :quantity => 1}, {:id => list.entries[0].id, :quantity => 1}]
+    
+    list.basket.post!(basket)
+  end
+end
+</pre>
+
+Again, if your server implements a well known e-commerce media type, Restfulie will serialize and handle everything for you. If your server uses a custom one, you can create your own handler and contribute with our project (although REST systems should, as much as possible, stick to well known media types).
+
+Let's buy our products:
+
+<pre>
+class FinishesOrder
+  def execute(basket)
+    payment = {:creditcard_number => "4850000000000001", :creditcard_holder => "guilherme silveira", :creditcard_expires => "10/2020", :creditcard_code => "123", :amount => basket.price}
+    basket.payment.post!(payment)
+  end
+end
+</pre>
+
+Again, media type handling, content negotiation, retrials, everything is handled by Mikyung and Restfulie.
+
+Now you can rest... or keep reading
+
+h2. The power
+
+The above example should suffice to buy something in *any* REST system that contains the basket and payment process.
+
+h2. How?
+
+All you need to do is understand some media type that your server does. If the server understands well-known ones (as per the REST definition), contribute to Restfulie with your media type implementation.
+
+If the server understand a custom media type, it should be their job to provide a media type handler, as they did not follow any standard.
+
+Note that providing a media type handler does not mean that your client will follow some specific steps, but whenever it follow some steps, it will it as the media type described.
+
+h2. Team and Support
+
+Guilherme Silveira is behind Mikyung and support can be received through Restfulie's mailing lists.
+
+h2. Registering media types and much more
+
+Mikyung uses Restfulie so everything related with content type negotiation should be configured there.
+
+h2. Objective and Steps
+
+Everything related to objective, steps, error code handling, execution postponing can be configured or hacked into Mikyung.
+
 h2. Objective examples
 
 You can create your own objective builders, with the required conditions that your goal achiever requires.
@@ -16,7 +124,6 @@ class Buy < RelationDrivenObjective
   
 end
 [/pre]
-
 
 
 A less declarative approach is to implement both the completed? and *next_step* methods:
