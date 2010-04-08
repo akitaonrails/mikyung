@@ -1,4 +1,5 @@
-class EntriesController < ApplicationController# Restfulie::Server::ActionController::Base
+class EntriesController < ApplicationController
+  include Restfulie::Server::ActionController::Base
 
   respond_to :atom
   

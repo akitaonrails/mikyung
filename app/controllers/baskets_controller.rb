@@ -1,4 +1,5 @@
 class BasketsController < ApplicationController
+  include Restfulie::Server::ActionController::Base
   
   respond_to :atom, :html, :commerce
   
@@ -13,7 +14,7 @@ class BasketsController < ApplicationController
   end
   
   def items
-    found = params[:basket][:item]
+    found = params[:feed][:entry]
     if found.kind_of? Array
       found
     else
