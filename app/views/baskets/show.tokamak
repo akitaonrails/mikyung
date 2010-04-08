@@ -9,7 +9,6 @@ describe_collection(@basket.selected_items, :values => { :id => "http://openbuy.
     member.links << link( :rel => :self, :href => item_url(selected_item))
 
     member.namespace(:item, "http://openbuy.com/media/item") do |ns|
-      puts "quantity '#{selected_item.quantity}'"
       ns.quantity = selected_item.quantity
     end
   end

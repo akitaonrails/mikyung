@@ -1,4 +1,8 @@
 # ISSUE 1 : allow get with content because we are not sending it, but request parametering it
+# ISSUE 2 : AtomLinkShortcut should be LinkShortcut
+# ISSUE 3 : remove default atom+xml type? only use default if it queries the controller
+# ISSUE 4 : work with xml on the client
+# ISSUE 5 : integration test with multiple content type matching as with opensearch example from mikyung
 
 require 'spec_helper'
 require 'mikyung'
