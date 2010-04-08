@@ -5,10 +5,10 @@ require 'rake/gempackagetask'
 require 'spec/rake/spectask'
 require 'rake/rdoctask'
 
-GEM = "restfulie"
+GEM = "mikyung"
 GEM_VERSION = "0.7.0"
-SUMMARY  = "Hypermedia aware resource based library in ruby (client side) and ruby on rails (server side)."
-AUTHOR   = "Guilherme Silveira, Caue Guerra"
+SUMMARY  = "Mikyung is a restful client built on top of Restfulie that allows real rest clients to be built."
+AUTHOR   = "Guilherme Silveira"
 EMAIL    = "guilherme.silveira@caelum.com.br"
 HOMEPAGE = "http://restfulie.caelumobjects.com"
 
@@ -19,76 +19,11 @@ spec = Gem::Specification.new do |s|
   s.summary = SUMMARY
   s.require_paths = ['lib']
   s.files = FileList['lib/**/*.rb', '[A-Z]*'].to_a
-  s.add_dependency("actionpack", [">= 2.3.2"])
-  s.add_dependency("activesupport", [">= 2.3.2"])
-  s.add_dependency("responders_backport", ["~> 0.1.0"])
+  s.add_dependency("restfulie", [">= 0.7.0"])
 
   s.author = AUTHOR
   s.email = EMAIL
   s.homepage = HOMEPAGE
-end
-
-namespace :test do
-  def execute_process(name)
-    sh "ruby ./spec/units/client/#{name}.rb &"  
-    %x(ps -ef | grep #{name}).split[1]  
-  end
-  def process(name)
-    %x(ps -ef | grep #{name} | grep -v grep).split[1] || execute_process(name)
-  end
-  def start_server_and_invoke_test(task_name)
-    pid = process "fake_server"
-    puts "fake_server pid >>>> #{pid}"
-    Rake::Task[task_name].invoke
-    sh "kill -9 #{pid}"
-  end
-  namespace :spec do
-    spec_opts = ['--options', File.join(File.dirname(__FILE__) , 'spec', 'units', 'spec.opts')]
-    Spec::Rake::SpecTask.new(:all) do |t|
-      t.spec_files = FileList['spec/units/**/*_spec.rb']
-      t.spec_opts = spec_opts
-    end
-    Spec::Rake::SpecTask.new(:common) do |t|
-      t.spec_files = FileList['spec/common/**/*_spec.rb']
-      t.spec_opts = spec_opts
-    end
-    Spec::Rake::SpecTask.new(:client) do |t|
-      t.spec_files = FileList['spec/units/client/**/*_spec.rb']
-      t.spec_opts = spec_opts
-    end
-    Spec::Rake::SpecTask.new(:server) do |t|
-      t.spec_files = FileList['spec/units/server/**/*_spec.rb']
-      t.spec_opts = spec_opts
-    end
-  end
-  
-  namespace :rcov do
-    Spec::Rake::SpecTask.new('rcov') do |t|
-      options_file = File.expand_path('spec/units/spec.opts')
-      t.spec_opts = %w(-fs -fh:doc/specs.html --color)
-      t.spec_files = FileList['spec/units/**/*_spec.rb']
-      t.rcov = true
-      t.rcov_opts = ["-e", "/Library*", "-e", "~/.rvm", "-e", "spec", "-i", "bin"]
-    end
-  end
-  
-  namespace :run do
-    task :all do
-      start_server_and_invoke_test('test:spec:all')
-    end
-    task :common do
-      start_server_and_invoke_test('test:spec:common')
-    end
-    task :client do
-      start_server_and_invoke_test('test:spec:client')
-    end
-    task :server do
-      start_server_and_invoke_test('test:spec:server')
-    end
-    task :rcov do
-      start_server_and_invoke_test('test:rcov:rcov')
-    end
-  end
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
@@ -121,8 +56,8 @@ task :make_spec do
 end
 
 desc "Builds the project"
-task :build => :spec
+task :build => :install
 
 desc "Default build will run specs"
-task :default => ['test:run:all']
+task :default => :install
 
