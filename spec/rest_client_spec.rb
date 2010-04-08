@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require 'mikyung'
+require 'opensearch'
 
 # module Restfulie::Common::Representation
 #   # Implements the interface for unmarshal Atom media type responses (application/atom+xml) to ruby objects instantiated by rAtom library.
@@ -73,23 +74,8 @@ describe Restfulie do
 
   class SearchProducts
     def execute(entry)
-      
-      # TODO 2 sera que funcionaria OPEN SEARCH???
-      
       # entry.search.access!("name" => "rest")
-      # entry.search.access!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-      # <item>
-      #   <name>rest</name>
-      # </item>")
-      
-      # "application/atom+xml", "search" ...
-      
-      entry.search.post!("")# ("name" => "rest")
-      # 
-      # "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-      # <item>
-      #   <name>rest</name>
-      # </item>")
+      entry.search.post!("rest")
     end
   end
   

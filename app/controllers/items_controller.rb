@@ -3,11 +3,11 @@ class ItemsController < Restfulie::Server::ActionController::Base
   respond_to :atom, :html
   
   def search_definition
-    render :xml => opensearch_definition(search_item_url)
+    render :text => opensearch_definition(search_item_url), :content_type => "application/opensearchdescription+xml"
   end
   
   def search
-    respond_with @items = Item.find_by_name(Item.new(params[:item]).name)
+    respond_with @items = Item.find_by_name(params[:q])
   end
   
   private
