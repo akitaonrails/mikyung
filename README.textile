@@ -6,6 +6,8 @@ But, Http, Verbs, Media types, Representations, Error codes, retrials, condition
 
 Built upon Restfulie, *Mikyung* provides a layer of client generalization that gives you enough room to configure how your client should behave in different situations and make them work with different servers.
 
+The following example can be executed from the example directory, just *clone and rake spec* it.
+
 h2. Simple example
 
 In order to create a REST client, anyone needs to have a goal and a sequence of steps that we can follow to pursue this goal. Mikyung implements a simple framework so you can define your goal and steps, and let everything else happen.
