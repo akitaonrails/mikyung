@@ -3,48 +3,11 @@ require 'mikyung'
 require 'opensearch_mediatype'
 require 'commerce_mediatype'
 
-# module Restfulie::Common::Representation
-#   # Implements the interface for unmarshal Atom media type responses (application/atom+xml) to ruby objects instantiated by rAtom library.
-#   #
-#   # Furthermore, this class extends rAtom behavior to enable client users to easily access link relationships.
-#   class Atom
-# 
-#     def verb_for(rel)
-#       {"search" => :post, "basket" => :post, "payment" => :post}[rel]
-#     end
-# 
-#     def self.to_hash(string)
-#       Hash.from_xml(string).with_indifferent_access
-#     end
-#   end
-# 
-# end
-
-module Restfulie::Client::HTTP#:nodoc:
-
-  # Gives to Atom::Link capabilities to fetch related resources.
-  module LinkRequestBuilder
-    # def access!(object)
-    #   if self.respond_to?(:original_media_type)
-    #     verb = Restfulie::Client::HTTP::RequestMarshaller.content_type_for(self.original_media_type).verb_for(self.rel)
-    #   end
-    #   if verb.nil?
-    #     # implement future guessing here
-    #     verb = :get
-    #   end
-    #   # self.type ==> expected media type
-    #   self.send("#{verb.to_s}!".to_s, object)
-    # end
-    
-  end
-end
-
 describe Restfulie do
 
   class SearchProducts
     def execute(entry)
-      # should be GET
-      # should be search.access
+      # should be GET, access
       entry.search.post!("rest")
     end
   end
@@ -52,6 +15,7 @@ describe Restfulie do
   class PickProduct
 
     def execute(list)
+      
       cheapest = list.entries.inject(list.entries[0]) do |f, s|
         f.price <= s.price ? f : s
       end
