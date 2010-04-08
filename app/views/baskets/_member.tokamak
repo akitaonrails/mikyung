@@ -1,6 +1,3 @@
-puts "ha"
-puts member
-puts items.class
 describe_collection(items) do |collection|
   collection.id = "xpto"
   collection.describe_members do |member,selected_item|

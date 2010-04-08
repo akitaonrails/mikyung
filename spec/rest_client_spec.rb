@@ -1,3 +1,5 @@
+# ISSUE 1 : allow get with content because we are not sending it, but request parametering it
+
 require 'spec_helper'
 require 'mikyung'
 
@@ -41,17 +43,17 @@ module Restfulie::Client::HTTP#:nodoc:
 
   # Gives to Atom::Link capabilities to fetch related resources.
   module LinkRequestBuilder
-    def access!(object)
-      if self.respond_to?(:original_media_type)
-        verb = Restfulie::Client::HTTP::RequestMarshaller.content_type_for(self.original_media_type).verb_for(self.rel)
-      end
-      if verb.nil?
-        # implement future guessing here
-        verb = :get
-      end
-      # self.type ==> expected media type
-      self.send("#{verb.to_s}!".to_s, object)
-    end
+    # def access!(object)
+    #   if self.respond_to?(:original_media_type)
+    #     verb = Restfulie::Client::HTTP::RequestMarshaller.content_type_for(self.original_media_type).verb_for(self.rel)
+    #   end
+    #   if verb.nil?
+    #     # implement future guessing here
+    #     verb = :get
+    #   end
+    #   # self.type ==> expected media type
+    #   self.send("#{verb.to_s}!".to_s, object)
+    # end
     
     # def do_conneg_and_choose_representation(method, path, *args)
     #   Restfulie::Client::HTTP::RequestMarshaller.content_type_for(media_type_for_myself)
@@ -72,7 +74,6 @@ describe Restfulie do
   class SearchProducts
     def execute(entry)
       
-      # automatic INSTANCE TO ATOM...
       # TODO 2 sera que funcionaria OPEN SEARCH???
       
       # entry.search.access!("name" => "rest")
@@ -83,16 +84,12 @@ describe Restfulie do
       
       # "application/atom+xml", "search" ...
       
-      entry.search.coloca todos os metodos ainda!!!(...)
-      
-      precisa daquele access!!
-      
-      entry.search.as('application/xml').post!(#{}"name" => "rest")
-      
-      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-      <item>
-        <name>rest</name>
-      </item>")
+      entry.search.post!("")# ("name" => "rest")
+      # 
+      # "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+      # <item>
+      #   <name>rest</name>
+      # </item>")
     end
   end
   

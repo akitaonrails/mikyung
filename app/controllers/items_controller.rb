@@ -3,7 +3,7 @@ class ItemsController < Restfulie::Server::ActionController::Base
   respond_to :atom, :html
   
   def search_definition
-    render :xml => opensearch_definition(search_items_url)
+    render :xml => opensearch_definition(search_item_url)
   end
   
   def search
@@ -23,10 +23,8 @@ class ItemsController < Restfulie::Server::ActionController::Base
       <Description>#{description}</Description>
       <Tags>#{tags}</Tags>
       <Contact>#{contact}</Contact>
-      <Url type=\"application/atom+xml\" 
-           template=\"#{search_url}?q={searchTerms}&amp;pw={startPage?}&amp\"/>
+      <Url type=\"application/atom+xml\" template=\"#{search_url}?q={searchTerms}&amp;pw={startPage?}&amp;\"/>
     </OpenSearchDescription>"
   end
   
 end
-
