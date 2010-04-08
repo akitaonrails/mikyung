@@ -1,0 +1,9 @@
+describe_collection(@payment) do |collection|
+  collection.title = basket_url @basket
+  collection.id = basket_url @basket
+  
+  collection.namespace(:payment, "http://openbuy.com/payment") do |ns|
+    ns.status = "paid"
+  end
+
+end

@@ -26,8 +26,11 @@ ActiveRecord::Schema.define(:version => 20100406181512) do
   end
 
   create_table "payments", :force => true do |t|
-    t.string   "state"
     t.decimal  "amount",     :default => 0.0
+    t.string   "name"
+    t.string   "number"
+    t.string   "code"
+    t.string   "expires"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "basket_id"

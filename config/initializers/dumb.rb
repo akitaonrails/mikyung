@@ -1,7 +1,7 @@
 class Restfulie::Common::Representation::Commerce
 
   cattr_reader :media_type_name
-  @@media_type_name = 'application/commerce+xml'
+  @@media_type_name = 'application/commerce+atom+xml'
 
   cattr_reader :headers
   @@headers = { 
@@ -11,7 +11,7 @@ class Restfulie::Common::Representation::Commerce
 
   #Convert raw string to rAtom instances
   def unmarshal(content)
-    Hash.from_xml(content)
+    Restfulie::Common::Representation::Atom.new.unmarshal(content)
   end
 
   def marshal(content, rel)
@@ -38,6 +38,6 @@ class Restfulie::Common::Representation::Commerce
   
 end
 
-Mime::Type.register "application/commerce+xml", :commerce
-Restfulie::Client::HTTP::RequestMarshaller.register_representation("application/commerce+xml", Restfulie::Common::Representation::Commerce)
-Restfulie::Server::ActionController::ParamsParser.register('application/commerce+xml', Restfulie::Common::Representation::Commerce)
+Mime::Type.register "application/commerce+atom+xml", :commerce
+Restfulie::Client::HTTP::RequestMarshaller.register_representation("application/commerce+atom+xml", Restfulie::Common::Representation::Commerce)
+Restfulie::Server::ActionController::ParamsParser.register('application/commerce+atom+xml', Restfulie::Common::Representation::Commerce)

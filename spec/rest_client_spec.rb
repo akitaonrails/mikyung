@@ -43,7 +43,8 @@ describe Restfulie do
 
   class SearchProducts
     def execute(entry)
-      # entry.search.access!("name" => "rest")
+      # should be GET
+      # should be search.access
       entry.search.post!("rest")
     end
   end
@@ -54,25 +55,18 @@ describe Restfulie do
       cheapest = list.entries.inject(list.entries[0]) do |f, s|
         f.price <= s.price ? f : s
       end
-      # post ==> faz um OPTIONS, pega o accept e tenta
-      basket = [{:id => cheapest.id, :quantity => 3}, {:id => cheapest.id, :quantity => 1}]
+      
+      # adds the cheapest and the first product
+      basket = [{:id => cheapest.id, :quantity => 1}, {:id => list.entries[0].id, :quantity => 1}]
+      
       list.basket.post!(basket)
-      # should be
-      # list.basket.post!(cheapest)
-      # should be
-      # list.basket << cheapest
     end
   end
   
   class FinishesOrder
     def execute(basket)
-      # FUNCIONAR ESSE PAYMENT
-      basket.payment.as("application/commerce+xml").post!("<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-      <payment>
-      ...
-      </payment>")
-      # should be basket.payment.post!(payment)
-      # should be basket.payment << payment
+      payment = {:creditcard_number => "4850000000000001", :creditcard_holder => "guilherme silveira", :creditcard_expires => "10/2020", :creditcard_code => "123", :amount => basket.price}
+      basket.payment.post!(payment)
     end
   end
   

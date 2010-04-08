@@ -7,7 +7,8 @@ class ItemsController < Restfulie::Server::ActionController::Base
   end
   
   def search
-    respond_with @items = Item.find_by_name(params[:q])
+    @query = params[:q]
+    respond_with @items = Item.find_by_name(@query)
   end
   
   private
