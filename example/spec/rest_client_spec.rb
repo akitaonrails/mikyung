@@ -7,8 +7,7 @@ describe Restfulie do
 
   class SearchProducts
     def execute(entry)
-      # should be GET, access
-      entry.search.post!("rest")
+      entry.search.get!("rest")
     end
   end
   

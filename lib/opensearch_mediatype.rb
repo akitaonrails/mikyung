@@ -4,6 +4,10 @@ class OpenSearchEngine
     @description = Restfulie.accepts("application/opensearchdescription+xml").at(uri).get!
   end
   
+  def get!(content)
+    post!(content)
+  end
+  
   def post!(terms)
     urls = @description["OpenSearchDescription"]["Url"]
     uri = urls["template"].gsub("{searchTerms}", terms).gsub("{startPage?}","1")
