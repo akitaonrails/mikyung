@@ -2,10 +2,10 @@ class Maze
   
   def map
       [ 
-      "S----",
-      "-----",
-      "-----",
-      "----E"
+      "S****",
+      "-****",
+      "-****",
+      "----X"
       ]
   end
   
@@ -15,6 +15,9 @@ class Maze
   def end_point
     [4,3]
   end
+  def contains(x,y)
+    x>=0 && y>=0 && y<map.length && x<map[y].length
+  end
   
 end
 
@@ -23,11 +26,16 @@ class MazesController < ApplicationController
   respond_to :room
   
   def entry
-    redirect_to maze_position_url(Maze.new.start_point[0], Maze.new.start_point[1])
+    @maze = Maze.new
+    redirect_to maze_position_url(@maze.start_point[0], @maze.start_point[1])
   end
   
   def position
-    puts "at #{params[:x]}, #{params[:y]}"
+    @maze = Maze.new
+    y = params[:y].to_i
+    x = params[:x].to_i
+    raise Error "You are out of the maze" unless @maze.contains(x,y)
+    raise Error "There is a wall at #{x}, #{y}" if @maze.map[y][x..x]=='*'
   end
   
 end
