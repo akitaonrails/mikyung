@@ -1,4 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.maze '/maze', :controller => :mazes, :action => :entry
+  map.maze_position '/maze/:x/:y', :controller => :mazes, :action => :position
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
