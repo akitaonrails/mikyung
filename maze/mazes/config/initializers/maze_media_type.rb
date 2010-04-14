@@ -1,7 +1,7 @@
 class Restfulie::Common::Representation::Maze
 
   cattr_reader :media_type_name
-  @@media_type_name = 'application/maze+atom+xml'
+  @@media_type_name = 'application/maze+xml'
 
   cattr_reader :headers
   @@headers = { 
@@ -15,7 +15,6 @@ class Restfulie::Common::Representation::Maze
   end
 
   def marshal(content, rel)
-    debugger
     if(rel=="basket")
       xml = '<?xml version="1.0" encoding="UTF-8"?>'
       xml << '<feed xmlns="http://www.w3.org/2005/Atom">'
@@ -53,5 +52,5 @@ class Restfulie::Common::Representation::Maze
   
 end
 
-Mime::Type.register "application/maze+atom+xml", :maze
-Restfulie::Client::HTTP::RequestMarshaller.register_representation("application/maze+atom+xml", Restfulie::Common::Representation::Maze)
+Mime::Type.register "application/maze+xml", :maze
+Restfulie::Client::HTTP::RequestMarshaller.register_representation("application/maze+xml", Restfulie::Common::Representation::Maze)
