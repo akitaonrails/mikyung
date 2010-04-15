@@ -8,11 +8,11 @@ class Maze::Enter
 end
 
 class Maze::Move
-  def initialize(name)
-    @name = name
+  def initialize(direction)
+    @direction = direction
   end
-  def execute(direction)
-    direction.send(name).get
+  def execute(room)
+    room.item.send(@direction).get
   end
 end
 
@@ -21,12 +21,15 @@ class Maze::Pick
     mazes.maze.get
   end
 end
+
 class Maze::Back
-  def initialize(list)
-    @previous = list.delete_at(list.length-1)
+  def initialize(path)
+    @path = path
   end
   def execute(actual)
-    Restfulie.at(@previous).get
+    return nil if @path.empty
+    last = @path.delete_at(path.length-1)
+    Restfulie.at(last).get
   end
 end
 
@@ -37,21 +40,24 @@ class ExitTryingEverything
   end
   
   def initialize
+    @path = []
     @visited = []
   end
   
   def next_step(resource)
     direction = [:east, :west, :north, :south].find do |direction|
-      resource.respond_to?(direction) && !@visited.include?(resource.links(direction).uri)
+      resource.respond_to?(direction) && !@visited.include?(resource.links(direction).href)
     end
     if direction
+      @path << resource.links(direction).href
+      @visited << resource.links(direction).href
       Maze::Move.new(direction) 
     elsif resource.respond_to?(:start)
       Maze::Enter.new
     elsif resource.respond_to?(:maze)
       Maze::Pick.new 
     else
-      Maze::Back.new(@visited)
+      Maze::Back.new(@path)
     end
   end
   
