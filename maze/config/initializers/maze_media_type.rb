@@ -28,7 +28,7 @@ class Restfulie::Common::Representation::Maze
       end
       xml << '</feed>'
       xml
-    elsif rel="payment"
+    elsif rel=="payment"
       xml = '<?xml version="1.0" encoding="UTF-8"?>'
       xml << '  <entry xmlns="http://www.w3.org/2005/Atom" xmlns:payment="http://openbuy.com/payment">'
       xml << '  <id>new basket</id>'
