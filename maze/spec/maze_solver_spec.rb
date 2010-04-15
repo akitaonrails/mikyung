@@ -33,7 +33,7 @@ class Maze::Back
   end
 end
 
-class ExitTryingEverything
+class Maze::ExitBackTracking
   
   def completed?(resource)
     resource.respond_to?(:exit)
@@ -46,7 +46,7 @@ class ExitTryingEverything
   
   def next_step(resource)
     direction = [:east, :west, :north, :south].find do |direction|
-      resource.respond_to?(direction) && !@visited.include?(resource.links(direction).href)
+      resource.links(direction) && !@visited.include?(resource.links(direction).href)
     end
     if direction
       @path << resource.links(direction).href
@@ -63,8 +63,8 @@ class ExitTryingEverything
   
 end
 
-context Mikyung do
+context Maze do
 #  Mikyung.new(ExitTryingEverything.new).run('http://localhost:3000/maze/0/0')
   # Mikyung.new(ExitTryingEverything.new).run('http://amundsen.com/examples/mazes/2d')
-Mikyung.new(ExitTryingEverything.new).run('http://amundsen.com/examples/mazes/2d/five-by-five/')
+  Mikyung.new(Maze::ExitBackTracking.new).run('http://amundsen.com/examples/mazes/2d/five-by-five/')
 end
