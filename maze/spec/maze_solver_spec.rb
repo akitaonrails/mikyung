@@ -2,11 +2,8 @@ require 'spec_helper'
 require 'mikyung'
 
 class Maze::Enter
-  def initialize
-    debugger
-  end
   def execute(maze)
-    maze.start
+    maze.start.get
   end
 end
 
@@ -15,21 +12,21 @@ class Maze::Move
     @name = name
   end
   def execute(direction)
-    direction.send name
+    direction.send(name).get
   end
 end
 
 class Maze::Pick
   def execute(mazes)
-    mazes.maze
+    mazes.maze.get
   end
 end
 class Maze::Back
   def initialize(list)
     @previous = list.delete_at(list.length-1)
   end
-  def visited(actual)
-    @previous
+  def execute(actual)
+    Restfulie.at(@previous).get
   end
 end
 
