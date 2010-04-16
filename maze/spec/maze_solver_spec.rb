@@ -3,7 +3,7 @@ require 'mikyung'
 
 class Maze::Enter
   def execute(maze)
-    maze.start.get
+    maze.item.start.get
   end
 end
 
@@ -12,7 +12,7 @@ class Maze::Move
     @direction = direction
   end
   def execute(room)
-    room.item.send(@direction).get
+    room.cell.send(@direction).get
   end
 end
 
@@ -27,8 +27,8 @@ class Maze::Back
     @path = path
   end
   def execute(actual)
-    return nil if @path.empty
-    last = @path.delete_at(path.length-1)
+    return nil if @path.empty?
+    last = @path.delete_at(@path.length-1)
     Restfulie.at(last).get
   end
 end
@@ -36,7 +36,7 @@ end
 class Maze::ExitBackTracking
   
   def completed?(resource)
-    resource.respond_to?(:exit)
+    resource.respond_to?(:cell) && resource.cell.links(:exit)
   end
   
   def initialize
@@ -46,13 +46,13 @@ class Maze::ExitBackTracking
   
   def next_step(resource)
     direction = [:east, :west, :north, :south].find do |direction|
-      resource.links(direction) && !@visited.include?(resource.links(direction).href)
+      resource.respond_to?(:cell) && resource.cell.links(direction) && !@visited.include?(resource.cell.links(direction).href)
     end
     if direction
-      @path << resource.links(direction).href
-      @visited << resource.links(direction).href
+      @path << resource.cell.links(direction).href
+      @visited << resource.cell.links(direction).href
       Maze::Move.new(direction) 
-    elsif resource.respond_to?(:start)
+    elsif resource.respond_to?(:item) && resource.item.links(:start)
       Maze::Enter.new
     elsif resource.respond_to?(:maze)
       Maze::Pick.new 
