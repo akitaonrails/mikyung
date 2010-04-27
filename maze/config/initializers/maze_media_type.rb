@@ -1,6 +1,6 @@
 class Restfulie::Common::Representation::Maze < Restfulie::Common::Representation::XmlD
 
-  @@media_type_name = 'application/maze+xml'
+  @@media_type_name = 'application/vnd.amundsen.maze+xml'
 
   @@headers = { 
     :get  => { 'Accept'       => media_type_name },

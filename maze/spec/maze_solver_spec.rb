@@ -66,5 +66,5 @@ end
 context Maze do
 #  Mikyung.new(ExitTryingEverything.new).run('http://localhost:3000/maze/0/0')
   # Mikyung.new(ExitTryingEverything.new).run('http://amundsen.com/examples/mazes/2d')
-  Mikyung.new(Maze::ExitBackTracking.new).run('http://amundsen.com/examples/mazes/2d/five-by-five/')
+  Mikyung.new(Maze::ExitBackTracking.new, Restfulie.at('http://amundsen.com/examples/mazes/2d/five-by-five/').accepts('application/vnd.amundsen.maze+xml').get! ).run
 end

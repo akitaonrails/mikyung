@@ -44,14 +44,15 @@ end
 class Mikyung
   
   # initializes with a goal in mind
-  def initialize(goal)
-    @goal = goal
+  def initialize(*args)
+    @goal = args[0]
+    @start = args[1] if args.size==2
   end
 
   # keeps changing from a steady state to another until its goal has been achieved
-  def run(uri)
+  def run(*args)
     
-    current = Restfulie.at(uri).get
+    current = @start || Restfulie.at(args[0]).get
     Restfulie::Common::Logger.logger.debug current.response.body
     
     while(!@goal.completed?(current))
