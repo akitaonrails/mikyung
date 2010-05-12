@@ -6,7 +6,7 @@ require 'spec/rake/spectask'
 require 'rake/rdoctask'
 
 GEM = "mikyung"
-GEM_VERSION = "0.8.0"
+GEM_VERSION = "0.7.3"
 SUMMARY  = "Mikyung is a restful client built on top of Restfulie that allows real rest clients to be built."
 AUTHOR   = "Guilherme Silveira"
 EMAIL    = "guilherme.silveira@caelum.com.br"
@@ -19,7 +19,7 @@ spec = Gem::Specification.new do |s|
   s.summary = SUMMARY
   s.require_paths = ['lib']
   s.files = FileList['lib/**/*.rb', '[A-Z]*'].to_a
-  s.add_dependency("restfulie", [">= 0.8.0"])
+  s.add_dependency("restfulie", [">= 0.7.2"])
 
   s.author = AUTHOR
   s.email = EMAIL

@@ -43,6 +43,8 @@ end
 # Mikyung.new(objective).run(uri)
 class Mikyung
   
+  attr_reader :start, :goal
+
   # initializes with a goal in mind
   def initialize(*args)
     @goal = args[0]
@@ -52,7 +54,7 @@ class Mikyung
   # keeps changing from a steady state to another until its goal has been achieved
   def run(*args)
     
-    current = @start || Restfulie.at(args[0]).get
+    @start = current = @start || Restfulie.at(args[0]).get
     Restfulie::Common::Logger.logger.debug current.response.body
     
     while(!@goal.completed?(current))
@@ -70,7 +72,7 @@ class Mikyung
   def try_to_execute(step, current, max_attempts)
     raise "Unable to proceed when trying to #{step}" if max_attempts == 0
 
-    resource = step.execute(current)
+    resource = step.execute(current, self)
     if resource==nil
       raise "Step returned 'give up'"
     end
