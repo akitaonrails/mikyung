@@ -33,20 +33,32 @@ class Maze::Back
   end
 end
 
-class Maze::ExitBackTracking
-  
-  def completed?(resource)
-    resource.respond_to?(:cell) && resource.cell.links(:exit)
-  end
+class Maze::BackTracObjective
   
   def initialize
     @path = []
     @visited = []
   end
-  
+
   def next_step(resource)
+    next_step2(resource) || Maze::Back.new(@path)
+  end
+  
+  def visited?(uri)
+    @visited.include?(uri)
+  end
+
+end
+
+class Maze::ExitBackTracking < Maze::BackTracObjective
+  
+  def completed?(resource)
+    resource.respond_to?(:cell) && resource.cell.links(:exit)
+  end
+  
+  def next_step2(resource)
     direction = [:east, :west, :north, :south].find do |direction|
-      resource.respond_to?(:cell) && resource.cell.links(direction) && !@visited.include?(resource.cell.links(direction).href)
+      resource.respond_to?(:cell) && resource.cell.links(direction) && !visited?(resource.cell.links(direction).href)
     end
     if direction
       @path << resource.cell.links(direction).href
@@ -57,7 +69,7 @@ class Maze::ExitBackTracking
     elsif resource.respond_to?(:maze)
       Maze::Pick.new 
     else
-      Maze::Back.new(@path)
+      nil
     end
   end
   

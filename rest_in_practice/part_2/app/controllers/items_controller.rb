@@ -2,7 +2,7 @@ class ItemsController < ApplicationController
   
   include Restfulie::Server::ActionController::Base
   
-  respond_to :xml, :json
+  respond_to :xml, :json, :atom
   
   def index
     @items = Item.all
